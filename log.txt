@@ -1,0 +1,4 @@
+29-Aug-25 14:52:47 - INFO: Inventário processado com sucesso!
+Arquivo salvo como: C:\Users\i0336821\OneDrive - Sanofi\Área de Trabalho\Test_Inventario-Rafa\Controle de Inventário.xlsx
+29-Aug-25 14:52:56 - INFO: Run: Processo finalizado com sucesso.
+29-Aug-25 14:56:45 - INFO: Run: Processo cancelado pelo usuário.

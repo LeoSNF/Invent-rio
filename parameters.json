@@ -1,0 +1,11 @@
+{
+    "version": "0.0.1",
+    "sapEnv": "/SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\"p:CN=SAPSERVICEPHS/sapphsas01.pharma.aventis.com\"\" SNC_QOP=9 /H/sapphsas01.pharma.aventis.com/S/3201 /UPDOWNLOAD_CP=2",
+    "sapEnvPRD": "/SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\"p:CN=SAPSERVICEPHS/sapphsas01.pharma.aventis.com\"\" SNC_QOP=9 /H/sapphsas01.pharma.aventis.com/S/3201 /UPDOWNLOAD_CP=2",
+    "sapEnvQA": "/SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\"p:CN=SAPSERVICEUHS/sapuhsas01.pharma.aventis.com\"\" SNC_QOP=9 /H/sapuhsas01.pharma.aventis.com/S/3201 /UPDOWNLOAD_CP=2",
+    "sapLang": "EN",
+    "sapConnBy": 2,
+    "sapFile": "C:\\Program Files\\SAP\\FrontEnd\\SapGui\\saplogon.exe",
+    "sapNewSession": 0,
+    "sapExportFileDestPath": ""
+}
