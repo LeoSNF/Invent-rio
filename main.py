@@ -100,6 +100,16 @@ class Inventory(Sap):
                     successMsg = self.__importDataFromBmbc(False)
                     successMsg += self.__converter_mhtml_para_excel(self.mhtmlSapPth + '\\BMBC.MHTML', self.mhtmlSapPth + '\\BMBC.xlsx')
                     if not self.execFail: askToCloseExcel = True
+
+                case CommandsCodes.EXTRACT_BOTH.value:
+                    successMsg = self.__importDataFromMb52()
+                    if not self.execFail:
+                        successMsg += '\n' + self.__importDataFromBmbc(False)
+                    if not self.execFail:
+                        successMsg += '\n' + self.__converter_mhtml_para_excel(self.mhtmlSapPth + '\\MB52.MHTML', self.mhtmlSapPth + '\\MB52.xlsx')
+                        successMsg += '\n' + self.__converter_mhtml_para_excel(self.mhtmlSapPth + '\\BMBC.MHTML', self.mhtmlSapPth + '\\BMBC.xlsx')
+                    if not self.execFail: askToCloseExcel = True
+
                 case CommandsCodes.CALCINVT.value:
                     self.__validateInputFilesPaths(mb52FilePth, bmbcFilePth, inventoryFilePth, onePortifolioFilePth)
                     successMsg = self.__processInventory(mb52FilePth, bmbcFilePth, inventoryFilePth, onePortifolioFilePth)

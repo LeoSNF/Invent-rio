@@ -1,0 +1,219 @@
+from tkinter import messagebox, filedialog
+import tkinter as tk
+from PIL import Image, ImageTk
+import os
+import ttkbootstrap as tb
+from enum import Enum
+
+
+class CommandsCodes(Enum):
+    MB52 = 0
+    BMBC = 1
+    CALCINVT = 2
+    CANCEL = -1
+
+
+class FormInventory:
+    def __init__(self, master:tb.Window):
+        RESAMPLE_FILTER = self.getResampleFilter()
+
+        self.__commandCode = -1
+
+        self.master = master
+        master.title("Sanofi - Controle de Inventário")
+        width, height = 800, 600
+        master.geometry(f"{width}x{height}")
+        master.resizable(False, False)
+        master.update_idletasks()
+        x = (master.winfo_screenwidth() // 2) - (width // 2)
+        y = (master.winfo_screenheight() // 2) - (height // 2)
+        master.geometry(f"{width}x{height}+{x}+{y}")
+        master.configure(bg="#C2B7BD")
+
+        # Adicionar logo Sanofi centralizada no topo
+        try:
+            self.logo_path = os.path.join("Logo", "logosanofi.png")
+            self.logo_image = Image.open(self.logo_path)
+            self.logo_image = self.logo_image.resize((355, 60), RESAMPLE_FILTER)
+
+            # Adiciona fundo igual ao fundo do tkinter
+            fundo_logo = Image.new("RGBA", (355, 60), "#C2B7BD")
+            self.logo_image = self.logo_image.convert("RGBA")
+            fundo_logo.paste(self.logo_image, (0, 0), self.logo_image)
+            self.logo_photo = ImageTk.PhotoImage(fundo_logo)
+            self.logo_label = tk.Label(master, image=self.logo_photo, bg="#C2B7BD", borderwidth=0)
+            self.logo_label.place(relx=0.5, y=30, anchor="n")
+        except Exception:
+            self.logo_label = tk.Label(master, text="Sanofi", font=("Arial", 28, "bold"), fg="#944294", bg="#C2B7BD", borderwidth=0)
+            self.logo_label.place(relx=0.5, y=30, anchor="n")
+
+        # Remover botões customizados e centralizados
+        # (nenhum botão customizado presente)
+
+        self.mb52_path = None
+        self.one_portfolio_path = None
+        self.inventory_path = None
+        self.bmbc_path = None
+
+        button_width = 15
+        label_font = ("Arial", 10)
+        label_bg = "#e0e0e0"
+        label_fg = "black"
+        frame_padx = 40
+        frame_pady = 10
+        row_pady = 0
+        label_ipady = 8
+
+        self.mb52_frame = tk.Frame(master, bg="#C2B7BD")
+        self.mb52_button = tb.Button(self.mb52_frame, text="MB52", command=self.load_mb52, width=button_width)
+        self.mb52_path_label = tb.Label(self.mb52_frame, foreground=label_fg, anchor="w", font=label_font)
+        self.mb52_button.grid(row=0, column=0, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="w")
+        self.mb52_path_label.grid(row=0, column=1, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="ew")
+        self.mb52_frame.grid_columnconfigure(1, weight=1)
+
+        self.bmbc_frame = tk.Frame(master, bg="#C2B7BD")
+        self.bmbc_button = tb.Button(self.bmbc_frame, text="BMBC", command=self.load_bmbc, width=button_width)
+        self.bmbc_path_label = tb.Label(self.bmbc_frame, foreground=label_fg, anchor="w", font=label_font)
+        self.bmbc_button.grid(row=0, column=0, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="w")
+        self.bmbc_path_label.grid(row=0, column=1, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="ew")
+        self.bmbc_frame.grid_columnconfigure(1, weight=1)
+
+        self.one_portfolio_frame = tk.Frame(master, bg="#C2B7BD")
+        self.one_portfolio_button = tb.Button(self.one_portfolio_frame, text="One Portfolio", command=self.load_one_portfolio, width=button_width)
+        self.one_portfolio_path_label = tb.Label(self.one_portfolio_frame, foreground=label_fg, anchor="w", font=label_font)
+        self.one_portfolio_button.grid(row=0, column=0, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="w")
+        self.one_portfolio_path_label.grid(row=0, column=1, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="ew")
+        self.one_portfolio_frame.grid_columnconfigure(1, weight=10)
+
+        self.inventory_frame = tk.Frame(master, bg="#C2B7BD")
+        self.inventory_button = tb.Button(self.inventory_frame, text="Inventory", command=self.load_inventory, width=button_width)
+        self.inventory_path_label = tb.Label(self.inventory_frame, foreground=label_fg, anchor="w", font=label_font)
+        self.inventory_button.grid(row=0, column=0, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="w")
+        self.inventory_path_label.grid(row=0, column=1, padx=(0, 10), pady=row_pady, ipady=label_ipady, sticky="ew")
+        self.inventory_frame.grid_columnconfigure(1, weight=1)
+
+        # Empacotar os frames dos botões - Define a posição dos botões
+        self.mb52_frame.pack(fill="x", padx=frame_padx, pady=(200, frame_pady))
+        self.bmbc_frame.pack(fill="x", padx=frame_padx, pady=(0, frame_pady))
+        self.one_portfolio_frame.pack(fill="x", padx=frame_padx, pady=(0, frame_pady))
+        self.inventory_frame.pack(fill="x", padx=frame_padx, pady=(0, frame_pady))
+
+        # Botões diretamente no master, centralizados abaixo da logo
+        self.btn_mb52 = tk.Button(
+            master, text="MB52", bg="#5A1761", fg="white",
+            font=("Arial", 12, "bold"), width=10, height=1, bd=0, relief="flat",
+            cursor="hand2", activebackground="#944294", activeforeground="white",
+            highlightbackground="#C2B7BD", highlightcolor="#C2B7BD", highlightthickness=2,
+            command=lambda: self.setCommandCode(0)
+        )
+        self.btn_bmbc = tk.Button(
+            master, text="BMBC", bg="#5A1761", fg="white",
+            font=("Arial", 12, "bold"), width=10, height=1, bd=0, relief="flat",
+            cursor="hand2", activebackground="#944294", activeforeground="white",
+            highlightbackground="#C2B7BD", highlightcolor="#C2B7BD", highlightthickness=2,
+            command=lambda: self.setCommandCode(1)
+        )
+        self.btn_cancel = tk.Button(
+            master, text="Sair", bg="#5A1761", fg="white",
+            font=("Arial", 12, "bold"), width=10, height=1, bd=0, relief="flat",
+            cursor="hand2", activebackground="#944294", activeforeground="white",
+            highlightbackground="#C2B7BD", highlightcolor="#C2B7BD", highlightthickness=2,
+            command=lambda: self.setCommandCode(-1)
+        )
+
+        # Centralizar os botões na horizontal
+        
+        y_botoes = 110
+        self.btn_mb52.place(relx=0.5, y=y_botoes, anchor="n", x=-110)
+        self.btn_bmbc.place(relx=0.5, y=y_botoes, anchor="n", x=110)
+        self.btn_cancel.place(relx=0.5, y=y_botoes, anchor="n", x=300)
+
+        self.status_label = tb.Label(master, text="Carregue todos os arquivos.", font=("Arial", 11, "bold"), foreground="#944294")
+        self.status_label.pack(pady=(20, 10))
+
+        # Botões Calcular Inventário e Limpar Tudo diretamente no master, centralizados na parte inferior
+        self.calcular_button = tb.Button(master, text="Calcular Inventário", command=lambda: self.setCommandCode(2), width=25)
+        self.limpar_button = tb.Button(master, text="Limpar Tudo", command=self.limpar_tudo, width=25, style="danger.TButton")
+        # Inicialmente escondidos
+        self.calcular_button.place_forget()
+        self.limpar_button.place_forget()
+
+        # Após criar widgets principais, garantir que fiquem acima do fundo
+    
+    def getResampleFilter(self):
+        # Compatibilidade com di9ij887i7ferentes versões do Pillow
+        try:
+            RESAMPLE_FILTER = Image.Resampling.LANCZOS
+        except AttributeError:
+            RESAMPLE_FILTER = getattr(Image, 'LANCZOS', None)
+            if RESAMPLE_FILTER is None:
+                RESAMPLE_FILTER = getattr(Image, 'ANTIALIAS', 1)  # 1 é o valor padrão do ANTIALIAS
+        
+        return RESAMPLE_FILTER
+
+    def update_status_label(self):
+        loaded_files = []
+        if self.mb52_path:
+            loaded_files.append("MB52")
+        if self.bmbc_path:
+            loaded_files.append("BMBC")
+        if self.one_portfolio_path:
+            loaded_files.append("One Portfolio")
+        if self.inventory_path:
+            loaded_files.append("Inventory")
+        
+        if loaded_files:
+            self.status_label.config(text=f"Arquivos carregados: {', '.join(loaded_files)}")
+            # Mostrar botões de ação
+            self.calcular_button.place(relx=0.5, rely=0.85, anchor="center")
+            self.limpar_button.place(relx=0.5, rely=0.92, anchor="center")
+        else:
+            self.status_label.config(text="Carregue todos os arquivos.")
+            # Esconder botões de ação
+            self.calcular_button.place_forget()
+            self.limpar_button.place_forget()
+
+    def load_mb52(self):
+        self._load_file('mb52', ["Excel files", "*.xlsx"], 'mb52_path', self.mb52_path_label)
+
+    def load_one_portfolio(self):
+        self._load_file('one portfolio', ["Excel files", "*.xlsb"], 'one_portfolio_path', self.one_portfolio_path_label)
+
+    def load_inventory(self):
+        self._load_file('inventory', ["Excel files", "*.xlsx"], 'inventory_path', self.inventory_path_label)
+
+    def load_bmbc(self):
+        self._load_file('bmbc', ["Excel files", "*.xlsx"], 'bmbc_path', self.bmbc_path_label)
+
+    def _load_file(self, keyword, filetype, attr_name, label_widget):
+        file_path = filedialog.askopenfilename(title=f"Selecionar arquivo {keyword}", filetypes=[filetype])
+        if file_path:
+            setattr(self, attr_name, file_path)
+            label_widget.config(text=os.path.basename(file_path))
+        self.update_status_label()
+
+    def limpar_tudo(self):
+        self.mb52_path = None
+        self.one_portfolio_path = None
+        self.inventory_path = None
+        self.bmbc_path = None
+        self.mb52_path_label.config(text="")
+        self.bmbc_path_label.config(text="")
+        self.one_portfolio_path_label.config(text="")
+        self.inventory_path_label.config(text="")
+        self.update_status_label()
+        messagebox.showinfo("Limpeza", "Todos os arquivos foram removidos!")
+
+    def setCommandCode(self, commandCode:int):
+        self.__commandCode = commandCode
+        self.master.destroy()
+
+    def safe_destroy(self):
+        if self.master.winfo_exists():
+            self.master.destroy()
+
+    @property
+    def commandCode(self):
+        try: return self.__commandCode
+        except: pass
+
