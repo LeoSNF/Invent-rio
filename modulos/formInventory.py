@@ -27,6 +27,8 @@ class FormInventory:
         master.geometry(f'{width}x{height}+{x}+{y}')
         
         self.__commandCode = CommandsCodes.CANCEL.value
+        # self.root = tb.Window(themename="flatly")
+        # self.root.withdraw()
         self.mb52_path = ""
         self.bmbc_path = ""
         self.one_portfolio_path = ""
@@ -181,28 +183,16 @@ class FormInventory:
         messagebox.showinfo("Limpeza", "Todos os campos foram limpos!")
 
     def setCommandCode(self, commandCode: int):
-        self.__commandCode = commandCode
-        self.master.save_data()
+        self.commandCode = commandCode
+        self.master.destroy()
 
     def confirm_and_calculate(self):
         resposta = messagebox.askyesno(title="Confirmar Ação",  message="Tem certeza que deseja carregar os dados?",default=messagebox.NO )
         if resposta:
             self.setCommandCode(CommandsCodes.CALCINVT.value)
-    
-    def save_data(self):
-        placeholder = "Caminho ou nome do arquivo..."
 
-        mb52_val = self.mb52_entry.get()
-        bmbc_val = self.bmbc_entry.get()
-        one_portfolio_val = self.one_portfolio_entry.get()
-        inv_val = self.inventory_entry.get()
-
-        self.mb52_path = mb52_val if placeholder not in mb52_val else ""
-        self.bmbc_path = bmbc_val if placeholder not in bmbc_val else ""
-        self.one_portfolio_path = one_portfolio_val if placeholder not in one_portfolio_val else ""
-        self.inventory_path = inv_val if placeholder not in inv_val else ""
-
-        self.master.destroy()
+    def get_command_code(self):
+        return self.__commandCode
 
     # @property
     # def mb52_path(self):
@@ -236,10 +226,4 @@ class FormInventory:
     # def inventory_path(self, value): 
     #     self.inventory_path = value
 
-    # @property
-    # def commandCode(self):
-    #     return self.__commandCode
     
-    # @commandCode.setter
-    # def commandCode(self, value):
-    #     self.__commandCode = value

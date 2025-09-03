@@ -1,0 +1,4 @@
+03-Sep-25 15:52:33 - INFO: Run: Processo finalizado com sucesso.
+03-Sep-25 15:53:01 - ERROR: __showFormAndReturnActionCode:
+
+ 'FormInventory' object has no attribute 'commandCode'
