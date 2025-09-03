@@ -76,7 +76,7 @@ class Inventory(Sap):
         except Exception as e:
             logging.error(f'__showFormAndReturnActionCode:\n\n {str(e)}')
             self.execFail = True
-            return (None, None, None, None, None, None)
+            return (None, None, None, None, None)
         
 
     def run(self) -> None:            

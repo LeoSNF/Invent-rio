@@ -27,6 +27,10 @@ class FormInventory:
         master.geometry(f'{width}x{height}+{x}+{y}')
         
         self.__commandCode = CommandsCodes.CANCEL.value
+        self.mb52_path = ""
+        self.bmbc_path = ""
+        self.one_portfolio_path = ""
+        self.inventory_path = ""
         self.build_ui_with_grid()
 
     def build_ui_with_grid(self):
@@ -178,22 +182,64 @@ class FormInventory:
 
     def setCommandCode(self, commandCode: int):
         self.__commandCode = commandCode
-        self.master.destroy()
+        self.master.save_data()
 
     def confirm_and_calculate(self):
         resposta = messagebox.askyesno(title="Confirmar Ação",  message="Tem certeza que deseja carregar os dados?",default=messagebox.NO )
         if resposta:
             self.setCommandCode(CommandsCodes.CALCINVT.value)
-
-    @property
-    def mb52_path(self): return self.mb52_entry.get()
-    @property
-    def bmbc_path(self): return self.bmbc_entry.get()
-    @property
-    def one_portfolio_path(self): return self.one_portfolio_entry.get()
-    @property
-    def inventory_path(self): return self.inventory_entry.get()
-    @property
     
-    def commandCode(self):
-        return self.__commandCode
+    def save_data(self):
+        placeholder = "Caminho ou nome do arquivo..."
+
+        mb52_val = self.mb52_entry.get()
+        bmbc_val = self.bmbc_entry.get()
+        one_portfolio_val = self.one_portfolio_entry.get()
+        inv_val = self.inventory_entry.get()
+
+        self.mb52_path = mb52_val if placeholder not in mb52_val else ""
+        self.bmbc_path = bmbc_val if placeholder not in bmbc_val else ""
+        self.one_portfolio_path = one_portfolio_val if placeholder not in one_portfolio_val else ""
+        self.inventory_path = inv_val if placeholder not in inv_val else ""
+
+        self.master.destroy()
+
+    # @property
+    # def mb52_path(self):
+    #     return self.mb52_path
+    
+    # @mb52_path.setter
+    # def mb52_path(self, value): 
+    #     self.mb52_path = value
+
+    # @property
+    # def bmbc_path(self): 
+    #     return self.bmbc_path
+    
+    # @bmbc_path.setter
+    # def bmbc_path(self, value): 
+    #     self.bmbc_path = value
+
+    # @property
+    # def one_portfolio_path(self):
+    #     return self.one_portfolio_path
+    
+    # @one_portfolio_path.setter
+    # def one_portfolio_path(self, value): 
+    #     self.one_portfolio_path = value
+
+    # @property
+    # def inventory_path(self): 
+    #     return self.inventory_path
+    
+    # @inventory_path.setter
+    # def inventory_path(self, value): 
+    #     self.inventory_path = value
+
+    # @property
+    # def commandCode(self):
+    #     return self.__commandCode
+    
+    # @commandCode.setter
+    # def commandCode(self, value):
+    #     self.__commandCode = value
